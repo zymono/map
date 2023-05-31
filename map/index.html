@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8556552407997724"
+    crossorigin="anonymous"></script>
+  <title>World Map with Search</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap');
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    #map {
+      height: 100%;
+    }
+
+    .search-container {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      z-index: 1000;
+      text-align: center;
+      transform: translateX(-50%);
+    }
+
+    .search-input {
+      width: 300px;
+      padding: 6px;
+      font-size: 14px;
+
+    }
+
+    #search-button {
+      font-size: 14px;
+      padding: 7px;
+      background-color: #04AA6D;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .search-button {
+      font-size: 14px;
+      padding: 7px;
+      background-color: #04AA6D;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .reviews button {
+      background-color: rgba(220, 220, 220, 0.8);
+      /* Light gray background color with 80% opacity */
+      color: #558255;
+      /* Green text color */
+      padding: 10px 20px;
+      /* Adjust padding as needed */
+      border-radius: 5px;
+      /* Rounded corners */
+      border: none;
+      /* No border */
+      cursor: pointer;
+      /* Show pointer on hover */
+    }
+
+    .reviews {
+      text-align: center;
+    }
+
+    .reviews button:hover {
+      background-color: rgba(220, 220, 220, 1);
+      /* Increase opacity on hover */
+      /* Increase opacity on hover */
+    }
+
+    .reviews button:active {
+      transform: translateY(1px);
+      /* Add slight vertical displacement on click */
+    }
+
+    .review {
+      background-color: rgba(220, 220, 220, 0.8);
+      /* Light gray background color with 80% opacity */
+      color: #558255;
+      /* Green text color */
+      padding: none;
+      /* Adjust padding as needed */
+      margin-bottom: 10px;
+      /* Add spacing between reviews */
+      border-radius: 5px;
+      text-align: center;
+      font-size: 13px;
+      /* Rounded corners */
+    }
+
+    .sidebar {
+      height: 100vh;
+      width: 15%;
+      position: fixed;
+      background-color: white;
+      z-index: 9999;
+      right: 0;
+      top: 0;
+      text-align: center;
+      align-items: center;
+      align-content: center;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .sidebar {
+        /* visibility: hidden; */
+        height: 20%;
+        width: 100vh;
+        position: fixed;
+        background-color: white;
+        z-index: 9999;
+        left: 0;
+        bottom: 0;
+        text-align: center;
+        align-items: center;
+        align-content: center;
+      }
+    }
+
+    .ad {
+      text-align: center;
+      background-color: rgba(220, 220, 220, 0.8);
+      /* Light gray background color with 80% opacity */
+      color: #558255;
+      /* Green text color */
+      padding: 10px 20px;
+      /* Adjust padding as needed */
+      border-radius: 5px;
+      /* Rounded corners */
+      border: none;
+      /* position: fixed; */
+      /* No border */
+      cursor: pointer;
+      margin-bottom: 10px;
+      /* Show pointer on hover */
+      align-self: center;
+    }
+
+    .ad:hover {
+      background-color: rgba(220, 220, 220, 1);
+    }
+
+    .ad:active {
+      transform: translateY(1px);
+    }
+
+    .ad img {
+      width: 75%;
+    }
+
+    .bottomSidebar {
+      bottom: 0;
+      position: absolute;
+      display: inline-block;
+      width: fit-content;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <div class="sidebar">
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8556552407997724"
+      crossorigin="anonymous"></script>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8556552407997724" data-ad-slot="6642549255"
+      data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script> -->
+    <div class="ad">
+      <img src="//zymono.com/images/zymono.png">
+      <p><strong>Zymono</strong><br>Reporting System</p>
+    </div>
+    <div class="ad">
+      <img src="https://mintlify.s3-us-west-1.amazonaws.com/codemail/images/387shots_so.png">
+      <p><strong>Codemail</strong><br>Mailing System</p>
+    </div>
+
+
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="search-input" class="search-input" placeholder="Search for a city/address" />
+    <button id="search-button">Search</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <script type="module">
+    // if (!window.localStorage.getItem('h')) {
+    //   window.localStorage.setItem('h', JSON.stringify('[]'))
+    // }
+
+    var map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    var searchInput = document.getElementById('search-input');
+    var searchButton = document.getElementById('search-button');
+
+    searchButton.addEventListener('click', function () {
+      var query = searchInput.value;
+      geocode(query, null, 'true');
+    });
+
+    function geocode(query, img, city) {
+      var apiUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query);
+
+      fetch(apiUrl)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          if (data.length > 0) {
+            var result = data[0];
+            var coordinates = [parseFloat(result.lat), parseFloat(result.lon)];
+            var name = result.display_name;
+
+            // map.setView(coordinates, 10); // Set the map view to the geocoded coordinates
+
+            if (city) {
+              window.localStorage.setItem('city', name)
+            }
+
+            if (img) {
+              var imageUrl = img
+
+              var marker = L.marker(coordinates).addTo(map)
+                .bindPopup(`<div><strong>${name}</strong></div><div><img src="${imageUrl}" alt="House image" height="150"></div><div style="text-align: center;"><button class="search-button" onclick="window.open('https://www.google.com/maps/place/${name}')">Get Directions</button></div><br>
+                <div id="${name}"></div><br><br><div class="reviews">
+                <div><strong>Leave a Review</strong></div>
+    <button onclick="review('${name}', 'OK')">Ok</button>
+    <button onclick="review('${name}', 'Good')">Good</button>
+    <button onclick="review('${name}', 'Great')">Great</button>
+  </div>`);
+
+              marker.on('click', function () {
+                marker.openPopup();
+
+                getReviews(name)
+                const h = JSON.parse(window.localStorage.getItem('h')) || [];
+                console.log(h)
+
+                var indexToRemove = name;  // Index of the element to remove
+
+                try {
+                  h.splice(indexToRemove, 1);
+                } catch {
+
+                }
+
+                h.push(name)
+                window.localStorage.setItem('h', JSON.stringify(h))
+              });
+            } else {
+              L.marker(coordinates).addTo(map)
+                .bindPopup(name)
+                .openPopup();
+            }
+
+          } else {
+            alert('Location not found.');
+          }
+        })
+        .catch(function (error) {
+          console.error('Error:', error);
+        });
+    }
+
+    function setLoc(query) {
+      var apiUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query);
+
+      fetch(apiUrl)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          if (data.length > 0) {
+            var result = data[0];
+            var coordinates = [parseFloat(result.lat), parseFloat(result.lon)];
+            var name = result.display_name;
+
+            map.setView(coordinates, 10); // Set the map view to the geocoded coordinates
+
+          } else {
+            alert('Location not found.');
+          }
+        })
+        .catch(function (error) {
+          console.error('Error:', error);
+        });
+    }
+
+    // if (window.localStorage.getItem('city')) {
+    //   setLoc(window.localStorage.getItem('city'))
+    // }
+    function centerMapToUserLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const {latitude, longitude} = position.coords;
+            map.setView([latitude, longitude], 10);
+            addMarkerToUserLocation(latitude, longitude);
+          },
+          function (error) {
+            console.error('Error getting user location:', error);
+
+            fetch('https://api.ipify.org/?format=json')
+              .then(response => response.json())
+              .then(data => {
+                const ip = data.ip
+
+                window.localStorage.setItem('ip', ip)
+                fetch(`https://ipapi.co/${data.ip}/json/`)
+                  .then(response => response.json())
+                  .then(data => {
+                    addMarkerToUserLocation(data.latitude, data.longitude);
+                    map.setView([data.latitude, data.longitude], 10)
+                    return {
+                      'ip': ip,
+                      'country': data.country,
+                      'region': data.region,
+                      'city': data.city,
+                      'postal': data.postal,
+                      'lat': data.latitude,
+                      'long': data.longitude,
+                      'cc': data.country_code
+                    };
+                  });
+              })
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+
+        fetch('https://api.ipify.org/?format=json')
+          .then(response => response.json())
+          .then(data => {
+            const ip = data.ip
+
+            window.localStorage.setItem('ip', ip)
+            fetch(`https://ipapi.co/${data.ip}/json/`)
+              .then(response => response.json())
+              .then(data => {
+                addMarkerToUserLocation(data.latitude, data.longitude);
+                map.setView([data.latitude, data.longitude], 10)
+                return {
+                  'ip': ip,
+                  'country': data.country,
+                  'region': data.region,
+                  'city': data.city,
+                  'postal': data.postal,
+                  'lat': data.latitude,
+                  'long': data.longitude,
+                  'cc': data.country_code
+                };
+              });
+          })
+      }
+    }
+
+    function addMarkerToUserLocation(latitude, longitude) {
+      var userMarker = L.marker([latitude, longitude], {icon: redIcon}).addTo(map);
+      userMarker.bindPopup('You are approximately here!');
+    }
+
+    // Create a custom red marker icon
+    var redIcon = L.icon({
+      iconUrl: 'https://i.imgur.com/7p2tjuH.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    });
+
+    // Call the function to center the map on the user's location
+    centerMapToUserLocation();
+
+
+
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtXRHxXA337UFyoHD7LcNLHLOYESgyn5Y",
+      authDomain: "glowfinder.firebaseapp.com",
+      projectId: "glowfinder",
+      storageBucket: "glowfinder.appspot.com",
+      messagingSenderId: "991071988580",
+      appId: "1:991071988580:web:fab87b65a65113a0f6e871"
+    };
+    export default firebaseConfig;
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    import {getStorage, ref, uploadString} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+    import {getDownloadURL, listAll, list} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+
+    const storage = getStorage()
+
+    const listRef = ref(storage, 'houses/');
+
+
+    // Find all the prefixes and items.
+    listAll(listRef)
+      .then((res) => {
+        res.prefixes.forEach((folderRef) => {
+          console.log(folderRef)
+          var get = folderRef._location.path_ + '/img.txt'
+          getDownloadURL(ref(storage, get))
+            .then((url) => {
+              // // `url` is the download URL for your variable
+              try {
+                const xhr = new XMLHttpRequest();
+
+                xhr.open('GET', url);
+                xhr.onload = function () {
+                  if (xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    //DO SOMETHING
+
+                    geocode(folderRef.name, JSON.parse(xhr.responseText))
+                  } else {
+                    console.error(xhr.statusText);
+                    const err3 = error
+                  }
+                };
+                xhr.onerror = function (error) {
+                  console.error(error);
+                  const err3 = error
+                };
+                xhr.send();
+              } catch (error) {
+              }
+            }) //end
+
+        });
+        res.items.forEach((itemRef) => {
+
+        });
+      }).catch((error) => {
+        const err3 = error
+      });
+
+    function review(address, rating) {
+      function saveCloud(where, what) {
+        var sr = where
+
+        const storage = getStorage();
+        const storageRef = ref(storage, sr);
+
+        uploadString(storageRef, what).then((snapshot) => {
+          console.log('Uploaded raw string');
+
+        })
+      }
+
+      if (window.localStorage.getItem('uid')) {
+        saveCloud(`reviews/${address}/${window.localStorage.getItem('displayName')}`, rating)
+      } else {
+        alert('An account is required to use this action!')
+      }
+    }
+
+    async function getReviews(address) {
+      const listRef = ref(storage, `reviews/${address}`);
+
+      // Fetch the first page of 100.
+      const firstPage = await list(listRef, {maxResults: 100})
+        .then((res) => {
+          res.items.forEach((itemRef) => {
+            // All the items under listRef.
+            console.log(itemRef)
+            var get = itemRef._location.path_
+            getDownloadURL(ref(storage, get))
+              .then((url) => {
+                // // `url` is the download URL for your variable
+                try {
+                  const xhr = new XMLHttpRequest();
+
+                  xhr.open('GET', url);
+                  xhr.onload = function () {
+                    if (xhr.status === 200) {
+                      console.log(xhr.responseText);
+                      //DO SOMETHING
+
+                      const div = document.createElement('div')
+                      div.setAttribute('class', 'review')
+                      div.innerHTML = `<strong>${itemRef.name}</strong>: <p style="display: inline-block;">${xhr.responseText}</p>`
+                      const box = document.getElementById(address)
+                      box.appendChild(div)
+                    } else {
+                      console.error(xhr.statusText);
+                      const err3 = error
+                    }
+                  };
+                  xhr.onerror = function (error) {
+                    console.error(error);
+                    const err3 = error
+                  };
+                  xhr.send();
+                } catch (error) {
+                }
+              }) //end
+          });
+        }).catch((error) => {
+          // Uh-oh, an error occurred!
+        });
+
+    }
+
+    window.review = review
+  </script>
+</body>
+
+</html>

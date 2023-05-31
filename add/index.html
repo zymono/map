@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/backend.js"></script>
+  <title>Submit House</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="file"],
+    input[type="text"],
+    input [type=checkbox] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    input[type="submit"] {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    #map {
+      height: 300px;
+      /* Adjust the height as needed */
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Submit House</h1>
+
+  <form>
+    <label for="image">House Image:</label>
+    <input type="file" id="image" name="image" accept="image/*" required>
+    <br>
+
+    <label for="address">House Address:</label>
+    <input type="text" id="address" name="address"
+      placeholder="Address line 1, City, County, State, Zip/Postal Code, Country" required>
+    <br>
+    <p style="display: inline-block;">By clicking submit, you agree to the <a href="//zymono.com/policy/terms.html">Zymono Terms of Service</a>, the <a href="//zymono.com/policy/privacy.html">Zymono Privacy Policy</a>, the <a href="//zymono.com/policy/acceptable-use.html">Zymono Acceptable use Policy</a>, the <a href="//zymono.com/policy/disclaimer.html">Zymono Disclaimer</a>, the <a href="//zymono.com/policy/cookies.html">Zymono Cookie Policy</a> and the <a href="/terms/">GlowFinder Address-Specific Terms</a></p>
+    <input type="submit" value="Submit">
+  </form><br><br>
+  <div id="map"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script type="module">
+    var map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const locationInput = document.getElementById('address');
+    locationInput.addEventListener('input', function (event) {
+      const query = event.target.value;
+      if (query.trim() !== '') {
+        geocode(query);
+      } else {
+        map.setView([0, 0], 2); // Reset the map view if the input is empty
+      }
+    });
+
+    function geocode(query) {
+      var apiUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query);
+
+      fetch(apiUrl)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          if (data.length > 0) {
+            var result = data[0];
+            var coordinates = [parseFloat(result.lat), parseFloat(result.lon)];
+            var name = result.display_name;
+
+            // Clear existing markers from the map
+            map.eachLayer(function (layer) {
+              if (layer instanceof L.Marker) {
+                map.removeLayer(layer);
+              }
+            });
+
+            // Set the map view to the geocoded coordinates
+            map.setView(coordinates, 10);
+
+            // Add a new marker for the geocoded location
+            var marker = L.marker(coordinates).addTo(map)
+              .bindPopup('<div><strong>' + name + '</strong></div>')
+              .bindPopup(name);
+            marker.openPopup();
+          } else {
+            // alert('Location not found.');
+          }
+        })
+        .catch(function (error) {
+          console.error('Error:', error);
+        });
+    }
+
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtXRHxXA337UFyoHD7LcNLHLOYESgyn5Y",
+      authDomain: "glowfinder.firebaseapp.com",
+      projectId: "glowfinder",
+      storageBucket: "glowfinder.appspot.com",
+      messagingSenderId: "991071988580",
+      appId: "1:991071988580:web:fab87b65a65113a0f6e871"
+    };
+    export default firebaseConfig;
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    import {getStorage, ref, uploadString} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+    import {getDownloadURL, listAll} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+
+    const storage = getStorage()
+
+    var get = `creators/${window.localStorage.getItem('uid')}/address`
+    getDownloadURL(ref(storage, get))
+      .then((url) => {
+        // // `url` is the download URL for your variable
+        try {
+          const xhr = new XMLHttpRequest();
+
+          xhr.open('GET', url);
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              console.log(xhr.responseText);
+              //DO SOMETHING
+
+              document.querySelector('html').remove()
+              window.location = '/edit/'
+            } else {
+              console.error(xhr.statusText);
+              const err3 = error
+            }
+          };
+          xhr.onerror = function (error) {
+            console.error(error);
+            const err3 = error
+          };
+          xhr.send();
+        } catch (error) {
+        }
+      }) //end
+
+    function saveCloud(where, what) {
+      var sr = where
+
+      const storage = getStorage();
+      const storageRef = ref(storage, sr);
+
+      uploadString(storageRef, what).then((snapshot) => {
+        console.log('Uploaded raw string');
+
+      })
+    }
+
+    const form = document.querySelector('form')
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const apiKey = 'db2e08783da783967be5eb3f488a1e6a';
+      const apiUrl = 'https://api.imgbb.com/1/upload';
+
+      const formData = new FormData();
+      const inputFile = document.getElementById('image').files[0];
+      formData.append('image', inputFile);
+      formData.append('key', apiKey);
+
+      fetch(apiUrl, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const imgURL = data.data.url
+
+            saveCloud(`creators/${window.localStorage.getItem('uid')}/address`, document.getElementById('address').value)
+            saveCloud(`houses/${document.getElementById('address').value}/img.txt`, JSON.stringify(imgURL))
+            window.localStorage.setItem('a', window.btoa(document.getElementById('address').value))
+
+            window.location = './sent'
+          } else {
+            alert('Error: ' + data.status_message);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          document.getElementById('result').innerHTML = 'Error: ' + error.message;
+        });
+    })
+
+  </script>
+</body>
+
+</html>

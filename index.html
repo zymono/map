@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  <link rel="icon" type="image/x-icon" href="favicon.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+  <title>Find Holiday Lights</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/187bc41bf1.js" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>
+  <div class="logo">
+    <span class="gradient-text">Glow</span><span class="gradient-text1">Finder</span> 
+    <!-- <div class="lmsg">Beta</div> -->
+  </div>
+  <header>
+    <nav>
+      <ul class="dd">
+        <li><a href="https://forms.gle/jbcE5ZHmatJG4Rjt6" class="rom">Remove Your Address</a></li>
+        <li><a href="/advertise/" class="rom">Advertise</a></li>
+        <li style="color:#4f4f4f;" class="rom">|</li>
+        <li><a href="//github.com/zymono/" class="rom"><i class="fa-brands fa-github"></i></a></li>
+        <!-- <li class="som"><a href="https://forms.gle/jbcE5ZHmatJG4Rjt6"><button>Remove Your Address</button></a></li> -->
+        <!-- <li><a href="mailto:inovate@code.mail.zymono.com"><i class="fa-solid fa-envelope"></i></a></li> -->
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <p>Halloween 🎃 is currently in season</p>
+    <h1 class="before:bg-shine relative mb-8 !text-white/80 before:absolute before:left-0 before:top-0 before:w-full before:animate-[shine_2s_ease-in-out] before:bg-[length:200%] before:bg-clip-text before:text-transparent before:content-['The_next_generation_of_writing_emails']  text-[38px] leading-[46px] md:text-[70px] md:leading-[85px] tracking-[-1.024px;] text-slate-12 font-bold">The next <span class="gradient-text">generation</span> of searching for <span class="gradient-text1">holiday lights</span>.</h1>
+    <!-- <p>Using <span class="gradient-text">Glow</span><span class="gradient-text1">Finder</span> you can find the best houses for trick-or-treating or christmas lights.</p> -->
+    <a href="/map/"><button>View The Map<i class="fa-solid fa-arrow-right" style="margin-left: 5px;"></i></button></a>
+    <a href="/add/"><button id="h">Add Your House <i class="fa-solid fa-arrow-right" style="margin-left: 5px;"></i></button></a>
+    <!-- 
+    <button class="dark-button" style="display: inline-block; margin-left: 20px;"><i style="color: darkgray; font-size: 18px;">$</i> npm i codemail <i class="fa-regular fa-clipboard" style="margin-left: 5px; cursor: pointer;" id="cpy"></i></button> -->
+  </main>
+  <!-- <footer>
+    <p id="credits">Made by <a href="//youtube.com/@lavadev"><span class="lava"><img src="https://i.imgur.com/88o6u2X.png" style="width: 18px; display: inline-block;"> LavaDev</span></a> and <span class="lava"><a href="//zymono.com"><img src="https://i.ibb.co/gJz0dMW/Copy-of-svg.png" style="width: 18px; display: inline-block;"> Zymono</span></a></p>
+  </footer> -->
+</body>
+</html>
+<style>
+
+  .gradient-text {
+  background: linear-gradient(to right, #273963, #5684f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+    .gradient-text1 {
+  background: linear-gradient(to right, #8b2337, #d0626d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+  
+  .lava {
+    display: inline-block;
+    transition: all 0.3s ease;
+    position: relative;
+    top: 0;
+    border: none;
+    background: none;
+    color: #878787;
+  }
+  .lava:hover {
+     transform: translateY(-5px) !important;
+  }
+  
+  #cyp {
+    border-radius: 4px;
+    border: 2px solid darkgray;
+  }
+
+  footer {
+    position: fixed; bottom: 5px;
+  }
+
+  .lmsg {
+    border-radius: 4px;
+/*     border: 2px solid #00b8b8; */
+    color: #00b8b8;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    text-align: center;
+    display: inline-block;
+    height: 6px;
+  }
+  
+  
+  body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-image: url("https://i.imgur.com/ke1ph5S.png");
+    background-size: cover;
+}
+
+.logo {
+/*   background-color: rgb(10, 10, 10); */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+  left: 0;
+  color: white;
+  margin-top: 20px;
+  margin-left: 150px;
+}
+
+header {
+/*   background-color: rgb(10, 10, 10); */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: 9998;
+  right: 0;
+  margin-top: 20px;
+  margin-right: 150px;
+}
+  
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  right: 0;
+  justify-content: space-between;
+}
+
+nav li {
+  margin: 0 10px;
+}
+
+nav div {
+  left: 0;
+}
+
+.dd {
+  right: 0;
+} 
+  
+nav a {
+  color: #707070;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 4px;
+}
+  
+nav a:hover {
+  color: #fff;
+  text-decoration: none;
+  background-color: #575757;
+  opacity: 0.7;
+  font-size: 16px;
+  border-radius: 4px;
+}
+  
+main {
+  max-width: 1200px;
+  /* margin: 80px auto 0; */
+  text-align: center;
+}
+
+h1 {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.33rem;
+  color: #666;
+  margin-bottom: 40px;
+  color: #878787;
+}
+
+button {
+  background-color: #fff;
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+  .som {
+    visibility: hidden;
+  }
+
+@media only screen and (max-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+  button {
+  background-color: #fff;
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.0rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.logo, .rom {
+  visibility: hidden;
+}
+  .som {
+    visibility: visible;
+  }
+
+  header {
+/*   background-color: rgb(10, 10, 10); */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  top: 0;
+  z-index: 9998;
+  margin-top: 20px;
+}
+  
+nav ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+  li {
+    width: 50vh;
+  }
+}
+
+button:hover {
+  background-color: #ebebeb;
+}
+
+h1 {
+  color: #d1d1d1;
+}
+
+.dark-button {
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  border-image: repeating-linear-gradient(
+    -45deg,
+    black,
+    #1e1e1e 10%,
+    #282828 20%,
+    #1e1e1e 30%,
+    #282828 40%,
+    #1e1e1e 50%,
+    #282828 60%,
+    #1e1e1e 70%,
+    #282828 80%,
+    #1e1e1e 90%,
+    black 100%
+  ) 1;
+  transition: all 0.3s ease;
+  background-clip: padding-box;
+  cursor: text;
+}
+
+.dark-button:hover {
+border-image: repeating-linear-gradient(
+    -45deg,
+    black,
+    #282828 10%,
+    #1e1e1e 20%,
+    #282828 30%,
+    #1e1e1e 40%,
+    #282828 50%,
+    #1e1e1e 60%,
+    #282828 70%,
+    #1e1e1e 80%,
+    #282828 90%,
+    black 100%
+  ) 1;
+  background-color: black;
+}
+
+  @media (max-width: 768px) {
+  .container {
+    width: 100%;
+    padding: 0 10px;
+  }
+  .header {
+    text-align: center;
+  }
+  .main {
+    padding: 0 10px;
+  }
+  .aside {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 100%;
+    padding: 0 10px;
+  }
+  .header {
+    text-align: center;
+  }
+  .main {
+    padding: 0 10px;
+  }
+  .aside {
+    display: none;
+  }
+}
+
+</style>
+<script>
+//   document.getElementById('cpy').addEventListener('click', copy)
+//   console.log('js')
+  
+//   function copy() {
+//     copyToClipboard('npm i codemail')
+//     document.getElementById('cpy').className = 'fa-solid fa-check';
+
+//     setTimeout(function() {
+//       document.getElementById('cpy').className = 'fa-regular fa-clipboard';
+//     }, 3000)
+//   }
+  
+//   function copyToClipboard(text) {
+//     const elem = document.createElement('textarea');
+//     elem.value = text;
+//     document.body.appendChild(elem);
+//     elem.select();
+//     document.execCommand('copy');
+//     document.body.removeChild(elem);
+// }
+
+  // if (window.localStorage.getItem('uid')) {
+  //   document.getElementById('h').innerHTML = `Edit Your House <i class="fa-solid fa-arrow-right" style="margin-left: 5px;"></i>`
+  // }
+</script>
