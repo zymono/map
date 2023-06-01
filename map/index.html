@@ -19,6 +19,7 @@
 
     #map {
       height: 100%;
+      width: 85%;
     }
 
     .search-container {
@@ -168,28 +169,101 @@
       display: inline-block;
       width: fit-content;
     }
+
+    :root {
+      --map-tiles-filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .map-tiles {
+        filter: var(--map-tiles-filter, none);
+      }
+
+      .search-container {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        z-index: 1000;
+        text-align: center;
+        transform: translateX(-50%);
+      }
+
+      .search-input {
+        width: 300px;
+        padding: 6px;
+        font-size: 14px;
+        background-color: #333;
+        color: #fff;
+      }
+
+      #search-button,
+      .search-button {
+        font-size: 14px;
+        padding: 7px;
+        background-color: #04AA6D;
+        border: none;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .reviews button {
+        background-color: rgba(220, 220, 220, 0.8);
+        color: #558255;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .reviews {
+        text-align: center;
+      }
+
+      .reviews button:hover {
+        background-color: rgba(220, 220, 220, 1);
+      }
+
+      .reviews button:active {
+        transform: translateY(1px);
+      }
+
+      .review {
+        background-color: rgba(220, 220, 220, 0.8);
+        color: #558255;
+        padding: none;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 13px;
+      }
+
+    }
   </style>
+
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 </head>
 
 <body>
   <div id="map"></div>
   <div class="sidebar">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8556552407997724"
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8556552407997724"
       crossorigin="anonymous"></script>
-    
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8556552407997724" data-ad-slot="6642549255"
       data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>
       (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-<!--     <div class="ad">
+    </script> -->
+    <div class="ad">
       <img src="//zymono.com/images/zymono.png">
       <p><strong>Zymono</strong><br>Reporting System</p>
     </div>
     <div class="ad">
       <img src="https://mintlify.s3-us-west-1.amazonaws.com/codemail/images/387shots_so.png">
       <p><strong>Codemail</strong><br>Mailing System</p>
-    </div> -->
+    </div>
 
 
   </div>
@@ -200,6 +274,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script type='text/javascript'
+    src='https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js'></script>
 
   <script type="module">
     // if (!window.localStorage.getItem('h')) {
@@ -208,10 +284,27 @@
 
     var map = L.map('map').setView([0, 0], 2);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-      maxZoom: 18,
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+    //   maxZoom: 18,
+    // }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors and <a href="https://zymono.com">Zymono</a>',
+      className: 'map-tiles',
+      maxZoom: 18
     }).addTo(map);
+    // geocode('Washington DC')
+    // geocode('Washington State')
+    // geocode('Nashville')
+    // geocode('Arizona State University')
+    // geocode('Arizona')
+    // geocode('Phoenix')
+    // geocode('Sky Harbor')
+    // geocode('Scottsdale')
+
+    setInterval(function () {
+      map.options.maxZoom = 18;
+    }, 200)
 
     var searchInput = document.getElementById('search-input');
     var searchButton = document.getElementById('search-button');
@@ -243,14 +336,17 @@
             if (img) {
               var imageUrl = img
 
-              var marker = L.marker(coordinates).addTo(map)
+              var marker = L.marker(coordinates)
                 .bindPopup(`<div><strong>${name}</strong></div><div><img src="${imageUrl}" alt="House image" height="150"></div><div style="text-align: center;"><button class="search-button" onclick="window.open('https://www.google.com/maps/place/${name}')">Get Directions</button></div><br>
                 <div id="${name}"></div><br><br><div class="reviews">
                 <div><strong>Leave a Review</strong></div>
     <button onclick="review('${name}', 'OK')">Ok</button>
     <button onclick="review('${name}', 'Good')">Good</button>
     <button onclick="review('${name}', 'Great')">Great</button>
-  </div>`);
+  </div><br><div style="cursor: pointer; text-align: center;" onclick="window.location = 'https://forms.gle/2F8nkrsp7wHbzzq38'">Nothing there?</div>`);
+              marker.addTo(map)
+              map.options.maxZoom = map.getZoom();
+              // map.setView(coordinates, map.getZoom(), { animate: false });
 
               marker.on('click', function () {
                 marker.openPopup();
@@ -271,9 +367,12 @@
                 window.localStorage.setItem('h', JSON.stringify(h))
               });
             } else {
-              L.marker(coordinates).addTo(map)
+              var marker = L.marker(coordinates)
                 .bindPopup(name)
                 .openPopup();
+              marker.addTo(map)
+              map.options.maxZoom = map.getZoom();
+
             }
 
           } else {
