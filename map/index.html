@@ -352,7 +352,7 @@
     <input type="text" id="${name}review" class="search-input" placeholder="Send a review for ${name}" /><br><br>
     <button onclick="review('${name}'); this.innerText = 'Sent'">Send</button>
   </div>
-  </div><br><div style="cursor: pointer; text-align: center;><p onclick="window.location = 'https://forms.gle/2F8nkrsp7wHbzzq38'" style="display: inline-block;">Nothing there?</p></div>`);
+  </div><br><div style="cursor: pointer; text-align: center;" onclick="window.location = 'https://forms.gle/2F8nkrsp7wHbzzq38'">Nothing there?</div>`);
               marker.addTo(map)
               map.options.maxZoom = map.getZoom();
               // map.setView(coordinates, map.getZoom(), { animate: false });
