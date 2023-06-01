@@ -1,0 +1,126 @@
+<title>Reviews</title>
+<br>
+<div id="reviews"></div>
+<script type="module">
+  const address = new URLSearchParams(location.search).get('house')
+
+  import {initializeApp} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAtXRHxXA337UFyoHD7LcNLHLOYESgyn5Y",
+    authDomain: "glowfinder.firebaseapp.com",
+    projectId: "glowfinder",
+    storageBucket: "glowfinder.appspot.com",
+    messagingSenderId: "991071988580",
+    appId: "1:991071988580:web:fab87b65a65113a0f6e871"
+  };
+  export default firebaseConfig;
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+  import {getStorage, ref, uploadString} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+  import {getDownloadURL, listAll, list} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-storage.js";
+
+  const storage = getStorage()
+
+  const listRef = ref(storage, `reviews/${address}`);
+
+  listAll(listRef)
+    .then((res) => {
+      res.prefixes.forEach((folderRef) => {
+        //Folders
+      });
+      res.items.forEach((itemRef) => {
+        var get = itemRef._location.path_
+        getDownloadURL(ref(storage, get))
+          .then((url) => {
+            // // `url` is the download URL for your variable
+            try {
+              const xhr = new XMLHttpRequest();
+
+              xhr.open('GET', url);
+              xhr.onload = function () {
+                if (xhr.status === 200) {
+                  console.log(xhr.responseText);
+                  //DO SOMETHING
+
+                  const div = document.createElement('div')
+                  div.setAttribute('class', 'review')
+                  div.innerHTML = `<strong>${itemRef.name}</strong>: <p style="display: inline-block;">${xhr.responseText}</p>`
+                  const box = document.getElementById('reviews')
+                  box.appendChild(div)
+                } else {
+                  console.error(xhr.statusText);
+                  const err3 = error
+                }
+              };
+              xhr.onerror = function (error) {
+                console.error(error);
+                const err3 = error
+              };
+              xhr.send();
+            } catch (error) {
+            }
+          }) //end
+      });
+    }).catch((error) => {
+      const err3 = error
+      console.log(error)
+    });
+</script>
+<style>
+  .reviews button {
+    background-color: rgba(220, 220, 220, 0.8);
+    /* Light gray background color with 80% opacity */
+    color: #558255;
+    /* Green text color */
+    padding: 10px 20px;
+    /* Adjust padding as needed */
+    border-radius: 5px;
+    /* Rounded corners */
+    border: none;
+    /* No border */
+    cursor: pointer;
+    /* Show pointer on hover */
+  }
+
+  .reviews {
+    text-align: center;
+  }
+
+  .reviews button:hover {
+    background-color: rgba(220, 220, 220, 1);
+    /* Increase opacity on hover */
+    /* Increase opacity on hover */
+  }
+
+  .reviews button:active {
+    transform: translateY(1px);
+    /* Add slight vertical displacement on click */
+  }
+
+  .review {
+    background-color: rgba(220, 220, 220, 0.8);
+    /* Light gray background color with 80% opacity */
+    color: #558255;
+    /* Green text color */
+    padding: none;
+    /* Adjust padding as needed */
+    margin-bottom: 10px;
+    /* Add spacing between reviews */
+    border-radius: 5px;
+    text-align: center;
+    font-size: 13px;
+    /* Rounded corners */
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap');
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+  }
+</style>
